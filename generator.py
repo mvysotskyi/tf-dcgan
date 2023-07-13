@@ -13,7 +13,7 @@ def create_generator(latent_dim: int):
         [
             keras.Input(shape=(latent_dim,)),
             keras.layers.Dense(8 * 8 * 128),
-            keras.layers.Reshape((8, 8, 256)),
+            keras.layers.Reshape((8, 8, 128)),
 
             keras.layers.Conv2DTranspose(128, kernel_size=4, strides=2, padding="same",
                                           activation=LeakyReLU(alpha=0.2)),
