@@ -49,6 +49,7 @@ class DCGAN(keras.Model):
         random_latent_vectors = tf.random.normal(shape=(batch_size, self.latent_dim))
 
         fake_labels = tf.zeros((batch_size, 1))
+        fake_labels += 0.05 * tf.random.uniform(shape=tf.shape(fake_labels))
 
         with tf.GradientTape() as tape:
             predictions = self.discriminator(self.generator(random_latent_vectors))
