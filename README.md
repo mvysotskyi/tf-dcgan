@@ -28,7 +28,7 @@ To run this code, you'll need the following dependencies:
     discriminator = keras.models.load_model("h5s\\discriminator_51.h5")
     generator = keras.models.load_model("h5s\\generator_51.h5")
     ```
-4. After training, you can use the trained model to generate new images using the `generate.py` script and passing the path to the saved generator model as an argument.\
+4. After training, you can use the trained model to generate new images using the `generate.py` script and passing the path to the saved generator model as an argument.
     ```bash
     python generate.py h5s/generator_51.h5
     ```
