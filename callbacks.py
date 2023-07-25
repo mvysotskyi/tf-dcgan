@@ -29,5 +29,5 @@ class SaveEpochCallback(keras.callbacks.Callback):
             img.save(f"generated_img_{epoch}_{i}.png")
 
         # Save models
-        # self.model.generator.save(f"h5s\\generator_{epoch}.h5")
-        # self.model.discriminator.save(f"h5s\\discriminator_{epoch}.h5")
+        self.model.generator.save(f"h5s\\generator_{epoch}.h5")
+        self.model.discriminator.save(f"h5s\\discriminator_{epoch}.h5")
