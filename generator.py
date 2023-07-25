@@ -17,7 +17,7 @@ def create_generator(latent_dim: int):
 
             keras.layers.Conv2DTranspose(128, kernel_size=4, strides=2, padding="same",
                                           activation=LeakyReLU(alpha=0.2)),
-            keras.layers.Conv2DTranspose(256, kernel_size=4, strides=2, padding="same",
+            keras.layers.Conv2DTranspose(128, kernel_size=4, strides=2, padding="same",
                                           activation=LeakyReLU(alpha=0.2)),
             keras.layers.Conv2DTranspose(256, kernel_size=4, strides=2, padding="same",
                                           activation=LeakyReLU(alpha=0.2)),

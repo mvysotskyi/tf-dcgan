@@ -2,42 +2,27 @@
 Train the model.
 """
 
-import tensorflow as tf
 from tensorflow import keras
 
 from dcgan import DCGAN
+from callbacks import SaveEpochCallback
+
 from generator import create_generator
 from discriminator import create_discriminator
 
-class DCGANCallback(keras.callbacks.Callback):
-    """
-    DCGAN callback.
-    """
-    def __init__(self, model: DCGAN, latent_dim: int):
-        super().__init__()
-        self.model = model
-        self.latent_dim = latent_dim
-
-    def on_epoch_end(self, epoch: int, logs=None):
-        """
-        Callback on epoch end.
-        """
-        # Sample random points in the latent space
-        random_latent_vectors = tf.random.normal(shape=(3, self.latent_dim))
-        generated_images = self.model.generator(random_latent_vectors)
-
-        # Save images
-        for i in range(generated_images.shape[0]):
-            img = tf.keras.preprocessing.image.array_to_img(generated_images[i])
-            img.save(f"generated_img_{epoch}_{i}.png")
-
 
 if __name__ == '__main__':
-    # import os
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+    # Use float16
+    # tf.keras.backend.set_floatx('float16')
 
-    generator = create_generator(128)
+    # Create discriminator and generator
     discriminator = create_discriminator()
+    generator = create_generator(128)
+
+    # Load discriminator and generator from h5 files
+    # discriminator = keras.models.load_model("h5s\\discriminator_51.h5")
+    # generator = keras.models.load_model("h5s\\generator_51.h5")
+
     dcgan = DCGAN(discriminator=discriminator, generator=generator, latent_dim=128)
 
     dcgan.compile(
@@ -46,22 +31,13 @@ if __name__ == '__main__':
         loss_fn=keras.losses.BinaryCrossentropy()
     )
 
-    dataset = keras.preprocessing.image_dataset_from_directory(
-        "data\\img_align_celeba",
-        label_mode=None,
-        image_size=(64, 64),
-        batch_size=32,
-        # shuffle=True
+    train_generator = keras.preprocessing.image.ImageDataGenerator(rescale=1.0/255.0)
+    dataset = train_generator.flow_from_directory(
+        directory="data",
+        target_size=(64, 64),
+        batch_size=16,
+        class_mode=None
     )
 
-    dataset = dataset.map(lambda x: x / 255.0)
-    # Get 30000 images from dataset
-    # dataset = dataset.take(320)
-
-    callback = DCGANCallback(dcgan, 128)
-    dcgan.fit(dataset, epochs=5, callbacks=[callback], batch_size=32)
-
-    # Save models
-    generator.save("generator.h5")
-    discriminator.save("discriminator.h5")
-
+    save_epoch_callback = SaveEpochCallback(dcgan, 128)
+    dcgan.fit(dataset, epochs=10, callbacks=[save_epoch_callback])

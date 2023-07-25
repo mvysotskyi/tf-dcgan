@@ -15,7 +15,10 @@ class DCGAN(keras.Model):
         self.generator: keras.Model = generator
         self.latent_dim = latent_dim
 
-    def compile(self, d_optimizer, g_optimizer, loss_fn: keras.losses.Loss):
+    def compile(self, 
+                d_optimizer: keras.optimizers.Optimizer,
+                g_optimizer: keras.optimizers.Optimizer,
+                loss_fn: keras.losses.Loss):
         super().compile()
         self.d_optimizer = d_optimizer
         self.g_optimizer = g_optimizer
@@ -24,14 +27,16 @@ class DCGAN(keras.Model):
         self.d_loss_metric = keras.metrics.Mean(name="d_loss")
         self.g_loss_metric = keras.metrics.Mean(name="g_loss")
 
-    def train_step(self, real_images: tf.Tensor):
+    def train_step(self, data: tf.Tensor):
+        # "data" is a batch of real images
+
         # Sample random points in the latent space
-        batch_size = tf.shape(real_images)[0]
+        batch_size = tf.shape(data)[0]
         random_latent_vectors = tf.random.normal(shape=(batch_size, self.latent_dim))
 
         # Decode them to fake images
         generated_images = self.generator(random_latent_vectors)
-        combined_images = tf.concat([generated_images, real_images], axis=0)
+        combined_images = tf.concat([generated_images, data], axis=0)
 
         # Assemble labels discriminating real from fake images
         labels = tf.concat([tf.ones((batch_size, 1)), tf.zeros((batch_size, 1))], axis=0)

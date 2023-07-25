@@ -10,6 +10,9 @@ __pycache__/
 data/
 img_align_celeba/
 
+# Additional scripts
+create_gif.py
+
 # Distribution / packaging
 .Python
 build/

@@ -15,7 +15,7 @@ def create_discriminator():
 
             keras.layers.Conv2D(64, kernel_size=4, strides=2, padding="same",
                                 activation=LeakyReLU(alpha=0.2)),
-            keras.layers.Conv2D(128, kernel_size=4, strides=2, padding="same",
+            keras.layers.Conv2D(64, kernel_size=4, strides=2, padding="same",
                                 activation=LeakyReLU(alpha=0.2)),
             keras.layers.Conv2D(128, kernel_size=4, strides=2, padding="same",
                                 activation=LeakyReLU(alpha=0.2)),
